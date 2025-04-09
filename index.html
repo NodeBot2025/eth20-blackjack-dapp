@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ETH20 Blackjack Bet</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #111; color: #fff; text-align: center; padding: 40px; }
+    .card { display: inline-block; margin: 5px; padding: 10px 20px; border: 1px solid #fff; border-radius: 8px; }
+    button { padding: 10px 20px; margin: 10px; font-size: 16px; cursor: pointer; }
+    .wallet { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>🃏 ETH20 Blackjack Bet</h1>
+  <div id="status">Place your bet to play blackjack!</div>
+  <div class="wallet">Your USDC Balance: $<span id="userBalance">50</span></div>
+  <div class="wallet">House Wallet Balance: $<span id="houseBalance">100</span></div>
+
+  <div>
+    <button onclick="startGame(10)">Bet $10</button>
+    <button onclick="startGame(25)">Bet $25</button>
+    <button onclick="startGame(50)">Bet $50</button>
+  </div>
+
+  <div id="result"></div>
+
+  <script>
+    let userBalance = 50;
+    let houseBalance = 100;
+
+    function startGame(betAmount) {
+      if (userBalance < betAmount) {
+        document.getElementById("status").innerText = "Insufficient funds!";
+        return;
+      }
+
+      const outcome = riggedBlackjack(); // true = user wins
+      let message = "";
+
+      if (outcome) {
+        userBalance += betAmount;
+        houseBalance -= betAmount;
+        message = `🎉 You win $${betAmount}!`;
+      } else {
+        userBalance -= betAmount;
+        houseBalance += betAmount;
+        message = `😢 You lost $${betAmount}.`;
+      }
+
+      updateBalances();
+      document.getElementById("status").innerText = message;
+    }
+
+    function riggedBlackjack() {
+      // 70% chance house wins
+      const chance = Math.random();
+      return chance > 0.7; // Only 30% chance user wins
+    }
+
+    function updateBalances() {
+      document.getElementById("userBalance").innerText = userBalance.toFixed(2);
+      document.getElementById("houseBalance").innerText = houseBalance.toFixed(2);
+
+      if (userBalance <= 0) {
+        document.getElementById("status").innerText = "Game over. You're out of USDC!";
+      }
+    }
+  </script>
+</body>
+</html>
